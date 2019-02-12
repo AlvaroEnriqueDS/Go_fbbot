@@ -11,10 +11,11 @@ import (
 //CODIGO HHTPS: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -nodes -days 365
 func main() {
         //cargando la cinfiguracion
-        loadconfig()
+        loadConfig()
 
         //LEVANTANDO EL SERVIDOR:
 	http.HandleFunc("/", saludar)
+        http.HandleFunc("/fbwebhook", fbwebhook)
 	log.Printf("Servidor iniciado en https://localhost%s %s %s", config.Port, config.CertPem, config.KeyPem)
 	//log.Println(http.ListenAndServe(":8085", nil))
 	//cambiamos la forma en el que subimos el servidor
@@ -29,19 +30,35 @@ func saludar(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hola Mundo"))
 }
 
+func fbwebhook(w http.ResponseWriter, r *http.Request) {
+        //validar di la peticion es get o post
+        if r.Method == http.MethodGet {
+                vt := r.URL.Query().Get("hub.verify_token")
+                if vt == config.MyToken {
+                        hc := r.URL.Query().Get("hub.challenge")
+                        w.WriteHeader(http.StatusOK)
+                        w.Write([]byte(hc))
+                        return
+                }
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte("Token no valido"))
+                return
+        }
+}
+
 //structura de  configuracion
 type Config struct {
 	Port    string `json:"port"`
 	CertPem string `json:"cert_pem"`
 	KeyPem  string `json:"key_pem"`
+	MyToken string `json:"my_token"`
 }
-
-//creamos una variable de la estructura Config
-//esta variable nos servira para la configuracion
-var config Config
+        //creamos una variable de la estructura Config
+        //esta variable nos servira para la configuracion
+        var config Config
 
 //funcion que nos lee el archivo json
-func loadconfig()  {
+func loadConfig() {
         //informacion de lectura de archivo
         log.Println("Leyendo el archivo de condifuracion")
         //slice de bytes b y un posible error err
