@@ -24,3 +24,6 @@
 
 ## Gogland ID (Intelellij)
 .idea/
+
+#carpeta de certificados
+certificates/
