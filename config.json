@@ -2,6 +2,7 @@
   "port": ":443",
   "cert_pem": "./certificates/cert.pem",
   "key_pem": "./certificates/key.pem",
-  "my_token": "my-secret-token"
+  "my_token": "my-secret-token",
+  "fb_token": "EAAES2ztnoVcBAMXGnzhrk3S0xFdKEGOhNzuHGnwjwyfFHZBy1gJzJql6ZANujpiDVAmskTxFLM1QYpWoehNTPf6TjQbK8m522iVIKkcuNe8xOZAdzkDFoKZBjzPpw6xok8BjZBWGWgeQ57qtGiyACdbjtLjnc5bnrISzYcg6c4wZDZD"
 
 }
